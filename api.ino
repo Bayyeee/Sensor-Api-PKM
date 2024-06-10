@@ -3,7 +3,7 @@
 
 const char* ssid = "UD-LiMa";
 const char* password = "udlimagantengbos123";
-const char* serverAddress = "http://192.168.1.198/add_data.php";  // Ganti dengan alamat script PHP Anda
+const char* serverAddress = "http://192.168.1.198/add_data.php";
 
 const int flamePin = A0;
 const int flameThreshold = 0;
