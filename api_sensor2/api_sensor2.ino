@@ -3,18 +3,19 @@
 
 const char* ssid = "UD-LiMa";
 const char* password = "udlimagantengbos123";
-const char* serverAddress = "https://fireguardudlima.000webhostapp.com/add_data.php";
+const char* serverAddress = "https://fireguardudlima.xyz/add_data.php";
 
 const int flamePin = A0;
 const int flameThreshold = 0;
 const int maxSensorValue = 4095;
 const int minSensorValue = 0;
 const int maxDistance = 1;
-const int minDistance = 150;
+const int minDistance = 500;
 
 bool flameDetected = false;
-unsigned long flameDetectedTime = 0;
-const unsigned long detectionTimeout = 5000; // 5 seconds
+unsigned long lastSentTime = 0;
+const unsigned long sendInterval = 5000;
+int lastFlameValue = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -26,11 +27,15 @@ void loop() {
   
   if (flameValue > flameThreshold) {
     flameDetected = true;
-    flameDetectedTime = millis();
-    sendData(flameValue);
-  } else if (flameDetected && millis() - flameDetectedTime >= detectionTimeout) {
+    lastFlameValue = flameValue;
+  } else {
     flameDetected = false;
-    sendData(0);
+    lastFlameValue = 0;
+  }
+
+  if (flameDetected && millis() - lastSentTime >= sendInterval) {
+    sendData(lastFlameValue);
+    lastSentTime = millis();
   }
 
   delay(1000);
